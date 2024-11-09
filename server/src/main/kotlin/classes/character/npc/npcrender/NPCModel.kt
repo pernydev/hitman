@@ -3,12 +3,22 @@ package me.perny.hitman.classes.character.npc.npcrender
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
+import me.perny.hitman.classes.character.GlowColor
+import me.perny.hitman.classes.character.npc.NPCCharacter
+import me.perny.hitman.classes.debugger.d
+import me.perny.hitman.utils.getGlowColorValue
 import net.minestom.server.coordinate.Point
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.coordinate.Vec
+import net.minestom.server.entity.EntityType
 import net.minestom.server.entity.Player
 import net.minestom.server.entity.PlayerSkin
+import net.minestom.server.entity.metadata.display.ItemDisplayMeta
 import net.minestom.server.instance.Instance
+import net.minestom.server.item.ItemStack
+import net.minestom.server.item.Material
+import net.minestom.server.potion.Potion
+import net.minestom.server.potion.PotionEffect
 import net.worldseed.gestures.ModelBoneEmote
 import net.worldseed.multipart.GenericModelImpl
 import net.worldseed.multipart.model_bones.ModelBone
@@ -18,7 +28,7 @@ import java.io.StringReader
 import java.util.function.Function
 import java.util.function.Predicate
 
-open class NPCModel(private val skin: PlayerSkin) : GenericModelImpl() {
+open class NPCModel(private val skin: PlayerSkin, private val npcCharacter: NPCCharacter) : GenericModelImpl() {
     override fun registerBoneSuppliers() {
         boneSuppliers[Predicate { name: String? -> true }] =
             Function { info: ModelBoneInfo ->
@@ -65,6 +75,12 @@ open class NPCModel(private val skin: PlayerSkin) : GenericModelImpl() {
                 viewableBones.add(modelBonePart as ModelBoneImpl)
             }
             modelBonePart.spawn(instance, modelBonePart.calculatePosition()).join()
+            modelBonePart.entity.isGlowing = true
+            modelBonePart.entity.editEntityMeta(ItemDisplayMeta::class.java) {
+                val color = getGlowColorValue(npcCharacter.glowColor)
+                d("Setting glow color to $color", "NPCModel")
+                it.glowColorOverride = color
+            }
         }
 
         this.draw()

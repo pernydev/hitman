@@ -4,6 +4,7 @@ import me.perny.hitman.classes.character.npc.NPCCharacter
 import me.perny.hitman.classes.character.npc.pathfinding.pathfindTo
 import me.perny.hitman.classes.character.npc.task.Task
 import me.perny.hitman.classes.character.npc.task.TaskPriority
+import me.perny.hitman.classes.debugger.d
 import net.minestom.server.coordinate.Pos
 import kotlin.concurrent.thread
 
@@ -35,9 +36,10 @@ class DestinationTask(
                 isUnfinished = true
             }
 
-            npc.npcrenderer?.playPath(path, {
+            npc.npcrenderer?.playPath(path) {
+                npc.d("DestinationTask finished")
                 notifyCompleted()
-            })
+            }
         }
     }
 

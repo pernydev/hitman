@@ -1,5 +1,7 @@
 package me.perny.hitman.classes
 
+import me.perny.hitman.skin.Overlays
+import me.perny.hitman.skin.getOverlayedSkin
 import net.minestom.server.entity.PlayerSkin
 
 class Skin(
@@ -8,7 +10,7 @@ class Skin(
     var voice: Int,
 ) {
     fun getPlayerSkin(): PlayerSkin {
-        return PlayerSkin.fromUsername("pernydev") ?: throw IllegalArgumentException("Skin not found")
+        return getOverlayedSkin(PlayerSkin.fromUsername("pernydev")!!, Overlays.GUARD)?.toSkin() ?: PlayerSkin.fromUsername("pernydev")!!
     }
 }
 

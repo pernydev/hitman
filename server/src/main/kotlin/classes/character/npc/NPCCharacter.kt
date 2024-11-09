@@ -1,6 +1,7 @@
 package me.perny.hitman.classes.character.npc
 
 import me.perny.hitman.classes.character.Character
+import me.perny.hitman.classes.character.GlowColor
 import me.perny.hitman.classes.character.npc.npcrender.NPCRenderer
 import me.perny.hitman.classes.world.World
 import me.perny.hitman.classes.character.signal.DefaultSignalListener
@@ -18,7 +19,7 @@ import me.perny.hitman.classes.world.randomPosition
 import me.perny.hitman.utils.findNearbyRandomLocation
 import net.minestom.server.coordinate.Pos
 
-open class NPCCharacter(world: World) : Character(world), SignalListener by DefaultSignalListener() {
+open class NPCCharacter(world: World, uuid: String, glowColor: GlowColor? = null) : Character(world, uuid, glowColor), SignalListener by DefaultSignalListener() {
     val taskManager = TaskManager(null, this)
     val speakManager = SpeakManager(this)
     var npcrenderer: NPCRenderer? = null
@@ -27,14 +28,16 @@ open class NPCCharacter(world: World) : Character(world), SignalListener by Defa
         taskManager.update()
         npcrenderer = NPCRenderer(this)
 
-        taskManager.addTask(
-            DestinationTask(
-                priority = TaskPriority.LOW,
-                destination = findNearbyRandomLocation(40),
-                run = false,
-                allowUnfinished = true
+        for (i in 0..50) {
+            taskManager.addTask(
+                DestinationTask(
+                    priority = TaskPriority.LOW,
+                    destination = findNearbyRandomLocation(40),
+                    run = false,
+                    allowUnfinished = true
+                )
             )
-        )
+        }
     }
 
     override fun nonblockingTick() {

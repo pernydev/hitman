@@ -18,7 +18,7 @@ dependencies {
     implementation("net.worldseed.multipart:WorldSeedEntityEngine:11.2.2")
     implementation("org.apache.commons:commons-io:1.3.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }
 
 tasks.test {

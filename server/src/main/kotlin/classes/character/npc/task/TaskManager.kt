@@ -1,13 +1,14 @@
 package me.perny.hitman.classes.character.npc.task
 
 import me.perny.hitman.classes.character.npc.NPCCharacter
+import me.perny.hitman.classes.debugger.d
 
 class TaskManager(private var baseTask: Task? = null, private val character: NPCCharacter) {
     private val taskQueue = mutableListOf<Task>()
     var currentTask: Task? = null
 
     fun addTask(task: Task) {
-        println("Adding task: $task")
+        task.taskManager = this
         task.requirementTask.let { requirement ->
             if (requirement == null) return@let
             if (requirement.state != TaskState.COMPLETED) {
@@ -43,7 +44,6 @@ class TaskManager(private var baseTask: Task? = null, private val character: NPC
     }
 
     private fun startTask(task: Task) {
-        println("Starting task: $task")
         currentTask?.interrupt()
 
         currentTask = task
@@ -52,6 +52,7 @@ class TaskManager(private var baseTask: Task? = null, private val character: NPC
     }
 
     fun update() {
+
         if (currentTask?.state == TaskState.COMPLETED || currentTask?.state == TaskState.FAILED) {
             currentTask = null
         }

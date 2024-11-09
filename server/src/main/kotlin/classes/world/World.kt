@@ -23,17 +23,15 @@ class World(val map: Map) {
     val areas: MutableList<Area> = mutableListOf()
 
     fun load() {
-        runBlocking {
-            instanceContainer.chunkLoader = AnvilLoader("maps/${map.id}/world")
-            instanceContainer.enableAutoChunkLoad(false)
-            val chunkLoadAmount = 16
-            for (x in -chunkLoadAmount..chunkLoadAmount) {
-                for (z in -chunkLoadAmount..chunkLoadAmount) {
-                    try {
-                        instanceContainer.loadChunk(x, z).join()
-                    } catch (e: Exception) {
-                        // Ignore
-                    }
+        instanceContainer.chunkLoader = AnvilLoader("maps/${map.id}/world")
+        instanceContainer.enableAutoChunkLoad(false)
+        val chunkLoadAmount = 16
+        for (x in -chunkLoadAmount..chunkLoadAmount) {
+            for (z in -chunkLoadAmount..chunkLoadAmount) {
+                try {
+                    instanceContainer.loadChunk(x, z).join()
+                } catch (e: Exception) {
+                    // Ignore
                 }
             }
         }

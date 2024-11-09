@@ -6,6 +6,7 @@ import me.perny.hitman.classes.map.Map
 import me.perny.hitman.classes.world.World
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Player
+import java.util.UUID
 
 class MissionBuilder {
     private val players = mutableListOf<Player>()
@@ -31,11 +32,13 @@ class MissionBuilder {
         val world = World(map!!)
 
         players.forEach {
-            world.addPlayableCharacter(PlayableCharacter(world, it))
+            val uuid = UUID.randomUUID().toString()
+            world.addPlayableCharacter(PlayableCharacter(world, it, uuid))
         }
 
         npcs.forEach {
-            world.addCharacter(NPCCharacter(world).apply { position = it })
+            val uuid = UUID.randomUUID().toString()
+            world.addCharacter(NPCCharacter(world, uuid).apply { position = it })
         }
 
         if (map == null) {

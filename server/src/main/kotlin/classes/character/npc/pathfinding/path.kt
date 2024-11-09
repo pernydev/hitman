@@ -10,14 +10,14 @@ import com.mattworzala.debug.DebugMessage
 import com.mattworzala.debug.shape.LineShape
 import com.mattworzala.debug.shape.Shape
 import me.perny.hitman.classes.character.Character
+import me.perny.hitman.classes.debugger.d
+import me.perny.hitman.classes.debugger.dLine
 
 fun findPath(start: Pos, end: Pos, instanceContainer: InstanceContainer): List<Pos> {
     val boundingBox = BoundingBox(
         Vec(0.0, 0.0, 0.0),
         Vec(.01, 2.0, .01)
     )
-
-    println("making walkable")
 
     val path = PathGenerator.generate(
         BlockGetter(instanceContainer),
@@ -32,30 +32,7 @@ fun findPath(start: Pos, end: Pos, instanceContainer: InstanceContainer): List<P
         Runnable { }
     )
 
-    println("path generated")
-
     val builder = DebugMessage.builder();
-
-    if (path.nodes.size > 2) {
-        val line = Shape.line()
-            .type(LineShape.Type.STRIP)
-            .color(0xFF00FF00.toInt())
-            .lineWidth(4f)
-
-
-        path.nodes.forEach {
-            if (it.x() == 0.0 && it.y() == 0.0 && it.z() == 0.0) return@forEach
-            line.point(Pos(it.x(), it.y(), it.z()))
-        }
-
-        val packet = builder.set(
-            "debug:test_line", line.build()
-        ).build().packet
-
-        instanceContainer.players.forEach {
-            it.sendPacket(packet)
-        }
-    }
 
     return path.nodes.map { Pos(it.x(), it.y(), it.z()) }
 }
@@ -77,5 +54,9 @@ fun Character.canWalkTo(pos: Pos): Boolean {
 }
 
 fun Character.pathfindTo(end: Pos): List<Pos> {
-    return findPath(this.position, end, this.world.instanceContainer)
+    val t1 = System.currentTimeMillis()
+    val path = findPath(this.position, end, this.world.instanceContainer)
+    this.d("Pathfinding took ${System.currentTimeMillis() - t1}ms")
+    this.dLine("path", 0x00FF00, path)
+    return path
 }

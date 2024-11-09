@@ -3,6 +3,7 @@ package me.perny.hitman.classes.character.npc.npcrender
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import me.perny.hitman.classes.character.npc.NPCCharacter
+import me.perny.hitman.classes.debugger.d
 import net.minestom.server.MinecraftServer
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.*
@@ -29,7 +30,7 @@ class NPCRenderer(
 
     init {
         val self: Entity = this
-        this.model = object : NPCModel(npcCharacter.skin.getPlayerSkin()) {
+        this.model = object : NPCModel(npcCharacter.skin.getPlayerSkin(), npcCharacter) {
             override fun setPosition(pos: Pos) {
                 super.setPosition(pos)
                 if (self.instance != null) {
@@ -119,6 +120,7 @@ class NPCRenderer(
     fun playPathAnimation() {
         thread {
             if (pathfindingIndex == pathfindingPath.size - 1) {
+                npcCharacter.d("Pathfinding finished")
                 pathfindingFinishedRunnable?.run()
                 return@thread
             }
